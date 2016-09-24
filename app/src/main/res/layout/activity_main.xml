@@ -7,16 +7,6 @@
     android:orientation="vertical"
     tools:context=".modules.home.MainActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="#dadad5"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Filippo Cake List"
-        android:textColor="#113344"
-        android:textSize="15sp" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cake_list"
         android:layout_width="match_parent"

@@ -30,12 +30,7 @@ public class NetworkUtils {
     public static boolean isNetAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
-        for (NetworkInfo ni : allNetworkInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected()) return true;
-        }
-        return false;
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -58,6 +58,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginRight="8dp"
         android:tint="#DDDDDD"
-        android:src="@android:drawable/ic_media_next"/>
+        android:src="@mipmap/ic_play_arrow_white_24dp"/>
 
 </LinearLayout>

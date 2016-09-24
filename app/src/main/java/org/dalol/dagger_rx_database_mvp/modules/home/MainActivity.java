@@ -16,10 +16,14 @@
 
 package org.dalol.dagger_rx_database_mvp.modules.home;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.dalol.dagger_rx_database_mvp.R;
@@ -48,7 +52,10 @@ public class MainActivity extends BaseActivity implements MainView {
     protected void onViewReady(Bundle savedInstanceState, Intent intent) {
         super.onViewReady(savedInstanceState, intent);
         initializeList();
+        loadCakes();
+    }
 
+    private void loadCakes() {
         if(NetworkUtils.isNetAvailable(this)) {
             mPresenter.getCakes();
         } else {
@@ -66,6 +73,38 @@ public class MainActivity extends BaseActivity implements MainView {
     @Override
     protected int getContentView() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_reload:
+                loadCakes();
+                return true;
+            case R.id.action_about:
+                showAbout();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showAbout() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage("Developed by Filippo Engidashet on 24/09/2016")
+                .setCancelable(true)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
     }
 
     @Override
