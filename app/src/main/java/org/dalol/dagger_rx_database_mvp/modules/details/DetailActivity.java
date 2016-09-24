@@ -19,6 +19,7 @@ package org.dalol.dagger_rx_database_mvp.modules.details;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,10 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import org.dalol.dagger_rx_database_mvp.R;
 import org.dalol.dagger_rx_database_mvp.base.BaseActivity;
 import org.dalol.dagger_rx_database_mvp.helper.ImageHandler;
-import org.dalol.dagger_rx_database_mvp.helper.SquareImageView;
 import org.dalol.dagger_rx_database_mvp.mvp.model.Cake;
-
-import java.io.Serializable;
 
 import butterknife.Bind;
 
@@ -56,6 +54,8 @@ public class DetailActivity extends BaseActivity {
             mCakeImage.setTransitionName("cakeImageAnimation");
         }
 
+        showBackArrow();
+
         Cake cake = (Cake) intent.getSerializableExtra(CAKE);
         setTitle("Cake Detail");
 
@@ -70,5 +70,15 @@ public class DetailActivity extends BaseActivity {
     @Override
     protected int getContentView() {
         return R.layout.activity_detail;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

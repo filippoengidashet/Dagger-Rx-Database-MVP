@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import org.dalol.dagger_rx_database_mvp.application.CakeApplication;
@@ -59,6 +60,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void resolveDaggerDependency() {}
+
+    protected void showBackArrow() {
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
 
     protected void showDialog(String message) {
         if (mProgressDialog == null) {
