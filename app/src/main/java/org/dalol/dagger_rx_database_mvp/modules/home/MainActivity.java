@@ -16,20 +16,24 @@
 
 package org.dalol.dagger_rx_database_mvp.modules.home;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.dalol.dagger_rx_database_mvp.R;
 import org.dalol.dagger_rx_database_mvp.base.BaseActivity;
 import org.dalol.dagger_rx_database_mvp.di.components.DaggerCakeComponent;
 import org.dalol.dagger_rx_database_mvp.di.module.CakeModule;
+import org.dalol.dagger_rx_database_mvp.modules.details.DetailActivity;
 import org.dalol.dagger_rx_database_mvp.modules.home.adapter.CakeAdapter;
 import org.dalol.dagger_rx_database_mvp.mvp.model.Cake;
 import org.dalol.dagger_rx_database_mvp.mvp.presenter.CakePresenter;
@@ -67,6 +71,7 @@ public class MainActivity extends BaseActivity implements MainView {
         mCakeList.setHasFixedSize(true);
         mCakeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mCakeAdapter = new CakeAdapter(getLayoutInflater());
+        mCakeAdapter.setCakeClickListener(mCakeClickListener);
         mCakeList.setAdapter(mCakeAdapter);
     }
 
@@ -96,14 +101,24 @@ public class MainActivity extends BaseActivity implements MainView {
 
     private void showAbout() {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage("Developed by Filippo Engidashet on 24/09/2016")
+                .setMessage("Developed by Filippo Engidashet on 24/09/2016. \n\nGet the code and follow me on github!")
                 .setCancelable(true)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                }).create();
+                })
+                .setNegativeButton("Get Code", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://github.com/filippella/Dagger-Rx-Database-MVP"));
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                })
+                .create();
         dialog.show();
     }
 
@@ -139,4 +154,19 @@ public class MainActivity extends BaseActivity implements MainView {
     public void onClearItems() {
         mCakeAdapter.clearCakes();
     }
+
+    private CakeAdapter.OnCakeClickListener mCakeClickListener = new CakeAdapter.OnCakeClickListener() {
+        @Override
+        public void onClick(View v, Cake cake, int position) {
+            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+            intent.putExtra(DetailActivity.CAKE, cake);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, v, "cakeImageAnimation");
+                startActivity(intent, options.toBundle());
+            } else {
+                startActivity(intent);
+            }
+        }
+    };
 }

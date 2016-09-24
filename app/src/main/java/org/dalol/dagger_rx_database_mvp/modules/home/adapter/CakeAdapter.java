@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.dalol.dagger_rx_database_mvp.R;
+import org.dalol.dagger_rx_database_mvp.helper.ImageHandler;
 import org.dalol.dagger_rx_database_mvp.mvp.model.Cake;
 
 import java.util.ArrayList;
@@ -78,27 +79,48 @@ public class CakeAdapter extends RecyclerView.Adapter<CakeAdapter.Holder> {
         notifyDataSetChanged();
     }
 
-    public class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.cake_icon) protected ImageView mCakeIcon;
         @Bind(R.id.textview_title) protected TextView mCakeTitle;
         @Bind(R.id.textview_preview_description) protected TextView mCakePreviewDescription;
 
         private Context mContext;
+        private Cake mCake;
 
         public Holder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mContext = itemView.getContext();
             ButterKnife.bind(this, itemView);
         }
 
         public void bind(Cake cake) {
+            mCake = cake;
             mCakeTitle.setText(cake.getTitle());
             mCakePreviewDescription.setText(cake.getPreviewDescription());
 
             Glide.with(mContext).load(cake.getImageUrl())
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(mCakeIcon);
+                    .into(new ImageHandler(mCakeIcon));
         }
+
+        @Override
+        public void onClick(View v) {
+            if (mCakeClickListener != null) {
+                mCakeClickListener.onClick(mCakeIcon, mCake, getAdapterPosition());
+            }
+        }
+    }
+
+    public void setCakeClickListener(OnCakeClickListener listener) {
+        mCakeClickListener = listener;
+    }
+
+    private OnCakeClickListener mCakeClickListener;
+
+    public interface OnCakeClickListener {
+
+        void onClick(View v, Cake cake, int position);
     }
 }
